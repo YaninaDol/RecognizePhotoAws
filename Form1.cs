@@ -88,6 +88,25 @@ namespace WindowsFormsApp2
                 else
                 {
                     MessageBox.Show("Camera devices found");
+                    try
+                    {
+                        OpenFileDialog fileDialog = new OpenFileDialog();
+                        fileDialog.Filter = "jpg|*.jpg|png|*.png";
+
+                        if (fileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            string path = fileDialog.FileName;
+                            this.CurPicture = new FileInfo(path).Name;
+                            AWSController.sendMyFileToS3(path, "atlantisbucket", "", this.CurPicture);
+                            pictureBox2.Image = new Bitmap(path);
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+
+
                 }
                 videoDevice = new VideoCaptureDevice(videoDevices[Convert.ToInt32(usbcamera)].MonikerString);
                 snapshotCapabilities = videoDevice.SnapshotCapabilities;
